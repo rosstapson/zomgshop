@@ -1,0 +1,49 @@
+[
+    {
+        "name": "SanDisk Ultra 128GB SDXC UHS-I Memory Card up to 80MB/s",
+        "price": "45.89",
+        "description": "Ultra-fast cards to store stuff",
+        "ratings": 4.5,
+        "images": [{
+            "public_id": "products/tzfsnrli3szrdnb4jgge",
+            "url": "https://res.cloudinary.com/shopit/image/upload/v1606231282/products/tzfsnrli3szrdnb4jgge.jpg"
+        }],
+        "category": "Electronics",
+        "seller": "Ebay",
+        "stock": 50,
+        "numOfReviews": 12,
+        "reviews": []
+    },
+    {
+        "name": "Zomg Wristwatch Ultra-Yuppoid",
+        "price": "45000.00",
+        "description": "Ultra-bling with the wrist",
+        "ratings": 4.7,
+        "images": [{
+            "public_id": "ecommerce/analog-classic",
+            "url": "https://res.cloudinary.com/drpamuyqj/image/upload/v1611567183/samples/ecommerce/analog-classic.jpg"
+        }],
+        "category": "Electronics",
+        "seller": "Ebay",
+        "stock": 5,
+        "numOfReviews": 10,
+        "reviews": []
+    },
+    {
+        "price": 12.89,
+        "ratings": 4.9,
+        "stock": 1,
+        "numOfReviews": 129,
+        "name": "Janis 1.0",
+        "description": "Ultra-schweet Epiphone Les Paul",
+        "images": [
+          {
+            "public_id": "products/tzfsnrli3szrdnb4jgge",
+            "url": "https://res.cloudinary.com/shopit/image/upload/v1606231282/products/tzfsnrli3szrdnb4jgge.jpg"
+          }
+        ],
+        "category": "Guitars",
+        "seller": "Dude",
+        "reviews": []
+      }
+]
