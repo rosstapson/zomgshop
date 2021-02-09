@@ -1,4 +1,4 @@
 
 D:\Downloads\MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\[TutsNode.com] - MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\15. Adding Shopping Cart
 
-2. Add to Cart Button.mp4
+4. Handle Quantity on Cart Component.mp4
