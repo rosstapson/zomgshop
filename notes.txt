@@ -1,4 +1,4 @@
 
-D:\Downloads\MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\[TutsNode.com] - MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\15. Adding Shopping Cart
+D:\Downloads\MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\[TutsNode.com] - MERN Stack Full Ecommerce Site - Using React, Redux, Node.js\18. Admin Routes - Part 1
 
-4. Handle Quantity on Cart Component.mp4
+1. Admin Sidebar Component.mp4

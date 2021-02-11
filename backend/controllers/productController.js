@@ -1,3 +1,4 @@
+const formidable = require('formidable');
 const Product = require('../models/product')
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncErrors = require('../middleware/catchAsyncErrors')
@@ -26,7 +27,7 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
     const apiFeatures = new APIFeatures(Product.find(), req.query)
         .search()
         .filter()
-       
+
     let products = await apiFeatures.query
     let filteredProductsCount = products.length
 
@@ -105,42 +106,57 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 // create review  => /api/v1/review
 
 exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
-    const { rating, comment, productId } = req.body
+    var form = new formidable.IncomingForm();
+    form.parse(req, async function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            res.status(500).send(err)
+            return;
+        }
+        const { rating, comment, productId } = fields
+        
+        const review = {
+            user: req.user._id,
+            name: req.user.name,
+            rating: Number(rating),
+            comment: comment
+        }
 
-    const review = {
-        user: req.user._id,
-        name: req.user.name,
-        rating: Number(rating),
-        comment: comment
-    }
+        const product = await Product.findById(productId)
 
-    const product = await Product.findById(productId)
+        if (!product) {
+            return res.status(500).json({ error: "zomg" })
+        }
 
-    const isReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString())
+        const isReviewed = product.reviews.find(
+            r => r.user.toString() === req.user._id.toString()
+        )
 
-    if (isReviewed) {
-        console.log("createProductReview");
-        product.reviews.forEach(r => {
-            if (r.user.toString() === req.user._id.toString()) {
-                r.comment = comment
-                r.rating = rating
-            }
+        if (isReviewed) {
+            console.log("createProductReview");
+            product.reviews.forEach(r => {
+                if (r.user.toString() === req.user._id.toString()) {
+                    r.comment = comment
+                    r.rating = rating
+                }
+            })
+        }
+        else {
+            product.reviews.push(review)
+            product.numOfReviews = product.reviews.length
+        }
+
+        product.ratings = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
+
+        await product.save({
+            validateBeforeSave: false
         })
-    }
-    else {
-        product.reviews.push(review)
-        product.numOfReviews = product.reviews.length
-    }
 
-    product.ratings = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
-
-    await product.save({
-        validateBeforeSave: false
+        res.status(200).json({
+            success: true
+        })
     })
 
-    res.status(200).json({
-        success: true
-    })
 })
 
 // get all product review => /api/v1/reviews
