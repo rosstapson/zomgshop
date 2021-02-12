@@ -3,19 +3,56 @@ const Product = require('../models/product')
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncErrors = require('../middleware/catchAsyncErrors')
 const APIFeatures = require('../utils/apiFeatures')
+const cloudinary = require('cloudinary')
 
-// create new: /api/v1/product/new
+// create new: /api/v1/admin/product/new
 
 exports.newProduct = catchAsyncErrors(async (req, res, next) => {
 
-    req.body.user = req.user.id;
+    var form = new formidable.IncomingForm();
+    form.parse(req, async function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            res.status(500).send(err)
+            return;
+        }
+        const { name, price, description, category, stock, seller, images } = fields
+        //console.log(images)
+        let imagesArray = []
+        if (typeof images === 'string') {
+            imagesArray.push(images)
+        }
+        else {
+            imagesArray = images
+        }
 
-    const product = await Product.create(req.body)
+        let imageLinks = []
+        for (let i = 0; i < imagesArray.length; i++) {
+            const result = await cloudinary.v2.uploader.upload(imagesArray[i], {
+                folder: 'products'
+            })
 
-    res.status(201).json({
-        success: true,
-        product
+            imageLinks.push({
+                public_id: result.public_id,
+                url: result.secure_url
+            })
+        }
+
+        //images = imageLinks;
+
+        let newProduct = { name, price, description, category, stock, seller, images: imageLinks }
+
+        newProduct.user = req.user.id;
+
+        const product = await Product.create(newProduct)
+
+        res.status(201).json({
+            success: true,
+            product
+        })
     })
+
+
 })
 
 // get all products => /api/v1/products?keyword=zomg
@@ -26,7 +63,7 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
 
     const apiFeatures = new APIFeatures(Product.find(), req.query)
         .search()
-        .filter()
+        //.filter()
 
     let products = await apiFeatures.query
     let filteredProductsCount = products.length
@@ -42,8 +79,6 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
         resultsPerPage,
         products
     })
-
-
 
 })
 
@@ -114,7 +149,7 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
             return;
         }
         const { rating, comment, productId } = fields
-        
+
         const review = {
             user: req.user._id,
             name: req.user.name,
@@ -203,4 +238,19 @@ exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
     res.status(201).json({
         success: true
     })
+})
+
+
+// get all products(admin) => /api/v1/admin/products
+exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+
+    const products = await Product.find();
+
+    res.status(200).json({
+        success: true,
+        products
+    })
+
+
+
 })
